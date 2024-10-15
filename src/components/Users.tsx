@@ -8,6 +8,7 @@ function Users() {
   const { data: users, error, isLoading } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
 
+  // додавання юзерів в стейт масив
   useEffect(() => {
     dispatch(setGetUsers(users || []));
   }, [dispatch, users]);
