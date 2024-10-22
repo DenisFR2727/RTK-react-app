@@ -2,6 +2,8 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IUsers } from "../../redux/type";
 import classes from "./UsersList.module.scss";
+import { useAppDispatch } from "../../redux/hooks";
+import { setShowModalForm } from "../../redux/usersSlice";
 
 interface UserProps {
   users: IUsers[] | undefined;
@@ -9,6 +11,11 @@ interface UserProps {
 }
 
 function UsersList({ users, deleteUserHandel }: UserProps) {
+  const dispatch = useAppDispatch();
+
+  const showUserForm = () => {
+    dispatch(setShowModalForm(true));
+  };
   return (
     <table className="table">
       <thead>
@@ -24,7 +31,9 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
             Address
           </th>
           <th scope="col" style={{ background: "red" }}></th>
-          <th scope="col"></th>
+          <th scope="col">
+            <button onClick={showUserForm}>Add user</button>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -42,15 +51,15 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
             </td>
             <td>
               <p>City:</p>
-              <p>{user.address.city}</p>
+              <p>{user.address?.city}</p>
             </td>
             <td>
               <p>Street:</p>
-              <p>{user.address.street}</p>
+              <p>{user.address?.street}</p>
             </td>
             <td>
               <p>Suite:</p>
-              <p>{user.address.suite}</p>
+              <p>{user.address?.suite}</p>
             </td>
             <td className={classes.content}>
               <button onClick={() => deleteUserHandel(user.id)}>Delete</button>

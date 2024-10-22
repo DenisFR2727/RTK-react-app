@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUsers } from "./type";
 
 interface InitialState {
-  users: IUsers[];
+  isShowModalForm: boolean;
 }
 const initialState: InitialState = {
-  users: [],
+  isShowModalForm: false,
 };
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    setShowModalForm(state, action: PayloadAction<boolean>) {
+      state.isShowModalForm = action.payload;
+    },
+  },
 });
-
-export const {} = userSlice.actions;
+export const { setShowModalForm } = userSlice.actions;
 export default userSlice.reducer;

@@ -25,9 +25,18 @@ export const usersApi = createApi({
       }),
       invalidatesTags: [{ type: "User", id: "LIST" }],
     }),
+    addUser: builder.mutation<IUsers, IUsers>({
+      query: (body) => ({
+        url: "users",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "User", id: "LIST" }],
+    }),
   }),
 });
-export const { useGetUsersQuery, useDeleteUserMutation } = usersApi;
+export const { useGetUsersQuery, useDeleteUserMutation, useAddUserMutation } =
+  usersApi;
 
 // providesTags -- використовується в RTK Query для того, щоб позначити,
 // які саме дані кэшуються за допомогою "тегів". Це дає можливість легко

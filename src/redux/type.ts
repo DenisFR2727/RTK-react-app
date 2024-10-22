@@ -7,8 +7,8 @@ interface Adress {
   street: string;
   suite: string;
   city: string;
-  zipcode: string;
-  geo: Geo;
+  zipcode?: string;
+  geo?: Geo;
 }
 interface Company {
   name: string;
@@ -21,8 +21,8 @@ export interface IUsers {
   name: string;
   username: string;
   email: string;
-  address: Adress;
+  address?: Adress | undefined;
   phone: string;
-  website: string;
-  company: Company;
+  website?: string;
+  company?: Company;
 }
