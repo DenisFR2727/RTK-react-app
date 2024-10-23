@@ -51,4 +51,33 @@
     color: red;
     font-size: 20px;
   }
+  .send {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px 60px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(56, 134, 106, 1) 35%,
+      rgba(0, 212, 255, 1) 100%
+    );
+    color: white;
+    font-weight: 700;
+    border: none;
+
+    &:hover {
+      background: rgb(2, 0, 36);
+      background: linear-gradient(
+        90deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(12, 231, 144, 0.7987570028011204) 35%,
+        rgba(0, 212, 255, 1) 100%
+      );
+    }
+  }
 }

@@ -4,7 +4,7 @@ import { IUsers } from "../../redux/type";
 import classes from "./UsersList.module.scss";
 import { useAppDispatch } from "../../redux/hooks";
 import { setShowModalForm } from "../../redux/usersSlice";
-
+import "../../styles/animations.scss";
 interface UserProps {
   users: IUsers[] | undefined;
   deleteUserHandel: (id: number) => void;

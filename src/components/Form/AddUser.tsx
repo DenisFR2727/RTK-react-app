@@ -118,7 +118,7 @@ function AddUser() {
               value={formik.values.email}
             />
             <span className={classes.line}></span>
-            <label data-address="address" htmlFor="address">
+            <label htmlFor="address">
               <span className={classes.required}>*</span> Address:
             </label>
             {formik.touched.address?.city && formik.errors.address?.city ? (
@@ -172,7 +172,7 @@ function AddUser() {
               name="phone"
               value={formik.values.phone}
             />
-            <button>Send</button>
+            <button className={classes.send}>Send</button>
           </form>
         </Modal>
       )}
