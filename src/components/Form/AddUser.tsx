@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import Modal from "../UI/Modal";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setShowModalForm } from "../../redux/usersSlice";
@@ -8,20 +8,26 @@ import { useAddUserMutation } from "../../api";
 import { IUsers } from "../../redux/type";
 import * as Yup from "yup";
 
+const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const nameAndUserRegex: RegExp = /^[^.]+$/;
+
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
+    .matches(nameAndUserRegex, "Invalid name")
     .required("Required"),
 
   username: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
+    .matches(nameAndUserRegex, "Invalid username")
     .required("Required"),
 
   email: Yup.string()
     .min(2, "Too Short!")
     .email("Invalid email")
+    .matches(emailRegex, "Invalid email")
     .required("Required"),
   phone: Yup.string().required("Required"),
   address: Yup.object().shape({
@@ -54,6 +60,7 @@ function AddUser() {
       try {
         await addUser(values).unwrap();
         dispatch(setShowModalForm(false));
+        formik.resetForm();
       } catch (error) {
         console.log("Error adding user:", error);
       }
@@ -69,7 +76,9 @@ function AddUser() {
       {showModalForm && (
         <Modal onClose={closeModalForm}>
           <form className={classes.form} onSubmit={formik.handleSubmit}>
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="name">
+              <span className={classes.required}>*</span> Name:
+            </label>
             {formik.touched.name && formik.errors.name ? (
               <div className={classes.error}>{formik.errors.name}</div>
             ) : null}
@@ -80,8 +89,10 @@ function AddUser() {
               name="name"
               value={formik.values.name}
             />
-            <span></span>
-            <label htmlFor="username">User Name:</label>
+            <span className={classes.line}></span>
+            <label htmlFor="username">
+              <span className={classes.required}>*</span> User Name:
+            </label>
             {formik.touched.username && formik.errors.username ? (
               <div className={classes.error}>{formik.errors.username}</div>
             ) : null}
@@ -92,8 +103,10 @@ function AddUser() {
               name="username"
               value={formik.values.username}
             />
-            <span></span>
-            <label htmlFor="email">Email:</label>
+            <span className={classes.line}></span>
+            <label htmlFor="email">
+              <span className={classes.required}>*</span> Email:
+            </label>
             {formik.touched.email && formik.errors.email ? (
               <div className={classes.error}>{formik.errors.email}</div>
             ) : null}
@@ -104,8 +117,10 @@ function AddUser() {
               name="email"
               value={formik.values.email}
             />
-            <span></span>
-            <label htmlFor="address">Address:</label>
+            <span className={classes.line}></span>
+            <label data-address="address" htmlFor="address">
+              <span className={classes.required}>*</span> Address:
+            </label>
             {formik.touched.address?.city && formik.errors.address?.city ? (
               <div className={classes.error}>{formik.errors.address.city}</div>
             ) : null}
@@ -143,7 +158,10 @@ function AddUser() {
               name="address.suite"
               value={formik.values.address?.suite}
             />
-            <label htmlFor="phone">Phone:</label>
+            <span className={classes.line}></span>
+            <label htmlFor="phone">
+              <span className={classes.required}>*</span> Phone:
+            </label>
             {formik.touched.phone && formik.errors.phone ? (
               <div className={classes.error}>{formik.errors.phone}</div>
             ) : null}

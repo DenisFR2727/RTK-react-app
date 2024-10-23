@@ -4,6 +4,33 @@
   input {
     display: flex;
     padding: 10px;
+    width: 300px;
+    border-radius: 10px;
+    caret-color: rgb(0, 34, 255);
+    color: rgb(0, 34, 255);
+  }
+  input::placeholder {
+    color: grey;
+    font-weight: 700;
+  }
+  input {
+    &:hover,
+    &:active {
+      border-color: greenyellow;
+      background-color: #6060f594;
+    }
+    &:focus {
+      border-color: grey;
+    }
+  }
+  input:focus::placeholder {
+    color: rgb(0, 34, 255);
+  }
+  label {
+    user-select: none;
+  }
+  label[data-address="address"] {
+    margin-top: 20px;
   }
   .address {
     margin-bottom: 10px;
@@ -12,5 +39,16 @@
     color: red;
     font-size: 18px;
     font-weight: 700;
+  }
+  .line {
+    display: flex;
+    margin-top: 15px;
+    width: 100%;
+    height: 1px;
+    background-color: grey;
+  }
+  .required {
+    color: red;
+    font-size: 20px;
   }
 }

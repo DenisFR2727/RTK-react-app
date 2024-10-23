@@ -38,7 +38,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
       </thead>
       <tbody>
         {users?.map((user) => (
-          <tr className={classes.background}>
+          <tr key={user.id} className={classes.background}>
             <th scope="row">{user.id}</th>
             <td className={classes.content}>
               <p>{user.name}</p>
