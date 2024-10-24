@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDeleteUserMutation, useGetUsersQuery } from "../../api";
+import { useGetUsersQuery } from "../../api";
 import UsersList from "./UsersList";
 import Loading from "../Loading/Loading";
 
@@ -7,10 +7,12 @@ import "../../styles/animations.scss";
 import "animate.css/animate.compat.css";
 import "react-animate-on-scroll";
 import ScrollAnimation from "react-animate-on-scroll";
+import { setDeleteUserId, setShowDeleteModal } from "../../redux/usersSlice";
+import { useAppDispatch } from "../../redux/hooks";
 
 function Users() {
   const { data: users, error, isLoading } = useGetUsersQuery();
-  const [setDeleteUser] = useDeleteUserMutation();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,16 +24,10 @@ function Users() {
     return () => clearTimeout(timeout);
   }, [isLoading]);
 
-  const deleteUserHandel = useCallback(
-    async (userId: number) => {
-      try {
-        await setDeleteUser(userId);
-      } catch (error) {
-        console.error("Error deleting user:", error);
-      }
-    },
-    [setDeleteUser]
-  );
+  const deleteUserHandel = useCallback((userId: number) => {
+    dispatch(setShowDeleteModal(true));
+    dispatch(setDeleteUserId(userId));
+  }, []);
 
   const list_user = (
     <UsersList users={users} deleteUserHandel={deleteUserHandel} />
