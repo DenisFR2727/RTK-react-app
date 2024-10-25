@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useGetUsersQuery } from "../../api";
 import UsersList from "./UsersList";
 import Loading from "../Loading/Loading";
+import ScrollAnimation from "react-animate-on-scroll";
+import { setDeleteUserId, setShowDeleteModal } from "../../redux/usersSlice";
+import { useAppDispatch } from "../../redux/hooks";
+import Error from "../Error/Error";
 
 import "../../styles/animations.scss";
 import "animate.css/animate.compat.css";
 import "react-animate-on-scroll";
-import ScrollAnimation from "react-animate-on-scroll";
-import { setDeleteUserId, setShowDeleteModal } from "../../redux/usersSlice";
-import { useAppDispatch } from "../../redux/hooks";
 
 function Users() {
   const { data: users, error, isLoading } = useGetUsersQuery();
@@ -34,7 +35,7 @@ function Users() {
   );
 
   if (loading || isLoading) return <Loading />;
-  if (error) return <div>Ошибка...</div>;
+  if (error) return <Error />;
 
   return (
     <div className="users">
