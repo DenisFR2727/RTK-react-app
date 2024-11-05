@@ -2,9 +2,11 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IUsers } from "../../redux/type";
 import classes from "./UsersList.module.scss";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setShowModalForm } from "../../redux/usersSlice";
 import "../../styles/animations.scss";
+import DeleteUser from "../UI/DeleteUser";
+import Edit from "../UI/Edit";
 interface UserProps {
   users: IUsers[] | undefined;
   deleteUserHandel: (id: number) => void;
@@ -12,10 +14,13 @@ interface UserProps {
 
 function UsersList({ users, deleteUserHandel }: UserProps) {
   const dispatch = useAppDispatch();
+  const isEditInput = useAppSelector((state) => state.user.isShowEditUser);
+  const currentIdEditUser = useAppSelector((state) => state.user.currentIdUser);
 
   const showUserForm = () => {
     dispatch(setShowModalForm(true));
   };
+
   return (
     <table className="table">
       <thead>
@@ -37,35 +42,60 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
         </tr>
       </thead>
       <tbody>
-        {users?.map((user) => (
-          <tr key={user.id} className={classes.background}>
-            <th scope="row">{user.id}</th>
-            <td className={classes.content}>
-              <p>{user.name}</p>
-            </td>
-            <td className={classes.content}>
-              <p>{user.username}</p>
-            </td>
-            <td className={classes.content}>
-              <p>{user.email}</p>
-            </td>
-            <td>
-              <p>City:</p>
-              <p>{user.address?.city}</p>
-            </td>
-            <td>
-              <p>Street:</p>
-              <p>{user.address?.street}</p>
-            </td>
-            <td>
-              <p>Suite:</p>
-              <p>{user.address?.suite}</p>
-            </td>
-            <td className={classes.content}>
-              <button onClick={() => deleteUserHandel(user.id)}>Delete</button>
-            </td>
-          </tr>
-        ))}
+        {users?.map((user) => {
+          const edit = isEditInput && currentIdEditUser === user.id;
+          return (
+            <tr key={user.id} className={classes.background}>
+              <th scope="row">{user.id}</th>
+              <td className={classes.content}>
+                <div className={classes.contentUser}>
+                  <p>{user.name}</p>
+                  {edit && <input type="text" placeholder="name" />}
+                </div>
+              </td>
+              <td className={classes.content}>
+                <div className={classes.contentUser}>
+                  <p>{user.username}</p>
+                  {edit && <input type="text" placeholder="username" />}
+                </div>
+              </td>
+              <td className={classes.content}>
+                <div className={classes.contentUser}>
+                  <p>{user.email}</p>
+                  {edit && <input type="email" placeholder="email" />}
+                </div>
+              </td>
+              <td className={classes.content}>
+                <div className={classes.contentUser}>
+                  <p>City:</p>
+                  <p>{user.address?.city}</p>
+                  {edit && <input type="text" placeholder="city" />}
+                </div>
+              </td>
+              <td className={classes.content}>
+                <div className={classes.contentUser}>
+                  <p>Street:</p>
+                  <p>{user.address?.street}</p>
+                  {edit && <input type="text" placeholder="street" />}
+                </div>
+              </td>
+              <td className={classes.content}>
+                <div className={classes.contentUser}>
+                  <p>Suite:</p>
+                  <p>{user.address?.suite}</p>
+                  {edit && <input type="text" placeholder="suite" />}
+                </div>
+              </td>
+              <td className={classes.content}>
+                <Edit userId={user.id} />
+                <DeleteUser
+                  id={user.id}
+                  deleteUserHandel={() => deleteUserHandel(user.id)}
+                />
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

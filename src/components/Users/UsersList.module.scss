@@ -1,6 +1,24 @@
 .content {
   text-align: center;
-  vertical-align: middle;
+  vertical-align: bottom;
+  height: 100%;
+
+  .contentUser {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+
+    input {
+      // width: 100%;
+      flex-shrink: 0;
+    }
+  }
+
+  button {
+    padding: 10px;
+    margin-left: 20px;
+  }
 }
 td {
   background-color: rgb(0, 106, 198) !important;

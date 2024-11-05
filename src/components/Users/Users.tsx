@@ -3,7 +3,7 @@ import { useGetUsersQuery } from "../../api";
 import UsersList from "./UsersList";
 import Loading from "../Loading/Loading";
 import ScrollAnimation from "react-animate-on-scroll";
-import { setDeleteUserId, setShowDeleteModal } from "../../redux/usersSlice";
+import { setCurrentIdUser, setShowDeleteModal } from "../../redux/usersSlice";
 import { useAppDispatch } from "../../redux/hooks";
 import Error from "../Error/Error";
 
@@ -27,7 +27,7 @@ function Users() {
 
   const deleteUserHandel = useCallback((userId: number) => {
     dispatch(setShowDeleteModal(true));
-    dispatch(setDeleteUserId(userId));
+    dispatch(setCurrentIdUser(userId));
   }, []);
 
   const list_user = (
