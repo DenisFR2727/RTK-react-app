@@ -39,10 +39,10 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
         [field]:
           field === "address" && addressField
             ? {
-                ...prev[userId]?.address,
-                [addressField]: value,
+                ...prev[userId]?.address, // Додаємо всі попередні дані адреси
+                [addressField]: value, // Оновлюємо конкретне поле адреси
               }
-            : value,
+            : value, // Оновлюємо інші поля, наприклад name, username
       },
     }));
   };
@@ -80,7 +80,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                       onChange={(e) =>
                         handleChange(user.id, "name", e.target.value)
                       }
-                      value={editUserValues[user.id]?.name || user.name}
+                      value={editUserValues[user.id]?.name ?? user.name ?? ""}
                       type="text"
                       placeholder="name"
                     />
@@ -95,7 +95,9 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                       onChange={(e) =>
                         handleChange(user.id, "username", e.target.value)
                       }
-                      value={editUserValues[user.id]?.username || user.username}
+                      value={
+                        editUserValues[user.id]?.username ?? user.username ?? ""
+                      }
                       type="text"
                       placeholder="username"
                     />
@@ -110,7 +112,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                       onChange={(e) =>
                         handleChange(user.id, "email", e.target.value)
                       }
-                      value={editUserValues[user.id]?.email || user.email}
+                      value={editUserValues[user.id]?.email ?? user.email ?? ""}
                       type="email"
                       placeholder="email"
                     />
@@ -128,7 +130,8 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                       }
                       value={
                         editUserValues[user.id]?.address?.city ??
-                        (user.address?.city || "")
+                        user.address?.city ??
+                        ""
                       }
                       type="text"
                       placeholder="city"
@@ -152,7 +155,8 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                       }
                       value={
                         editUserValues[user.id]?.address?.street ??
-                        (user.address?.street || "")
+                        user.address?.street ??
+                        ""
                       }
                       type="text"
                       placeholder="street"
@@ -176,7 +180,8 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                       }
                       value={
                         editUserValues[user.id]?.address?.suite ??
-                        (user.address?.suite || "")
+                        user.address?.suite ??
+                        ""
                       }
                       type="text"
                       placeholder="suite"
@@ -185,7 +190,11 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                 </div>
               </td>
               <td className={classes.content}>
-                <Edit userId={user.id} />
+                <Edit
+                  userId={user.id}
+                  updateEditUser={editUserValues}
+                  users={users}
+                />
                 <DeleteUser
                   id={user.id}
                   deleteUserHandel={() => deleteUserHandel(user.id)}
