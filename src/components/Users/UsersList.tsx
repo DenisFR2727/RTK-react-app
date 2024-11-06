@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IUsers } from "../../redux/type";
 import classes from "./UsersList.module.scss";
@@ -17,10 +17,35 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
   const isEditInput = useAppSelector((state) => state.user.isShowEditUser);
   const currentIdEditUser = useAppSelector((state) => state.user.currentIdUser);
 
+  const [editUserValues, setEditUserValues] = useState<{
+    [key: number]: Partial<IUsers>;
+  }>({});
+
   const showUserForm = () => {
     dispatch(setShowModalForm(true));
   };
 
+  // Edit Input User
+  const handleChange = (
+    userId: number,
+    field: keyof IUsers | "address",
+    value: string,
+    addressField?: keyof IUsers["address"]
+  ) => {
+    setEditUserValues((prev) => ({
+      ...prev,
+      [userId]: {
+        ...prev[userId],
+        [field]:
+          field === "address" && addressField
+            ? {
+                ...prev[userId]?.address,
+                [addressField]: value,
+              }
+            : value,
+      },
+    }));
+  };
   return (
     <table className="table">
       <thead>
@@ -50,40 +75,113 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>{user.name}</p>
-                  {edit && <input type="text" placeholder="name" />}
+                  {edit && (
+                    <input
+                      onChange={(e) =>
+                        handleChange(user.id, "name", e.target.value)
+                      }
+                      value={editUserValues[user.id]?.name || user.name}
+                      type="text"
+                      placeholder="name"
+                    />
+                  )}
                 </div>
               </td>
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>{user.username}</p>
-                  {edit && <input type="text" placeholder="username" />}
+                  {edit && (
+                    <input
+                      onChange={(e) =>
+                        handleChange(user.id, "username", e.target.value)
+                      }
+                      value={editUserValues[user.id]?.username || user.username}
+                      type="text"
+                      placeholder="username"
+                    />
+                  )}
                 </div>
               </td>
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>{user.email}</p>
-                  {edit && <input type="email" placeholder="email" />}
+                  {edit && (
+                    <input
+                      onChange={(e) =>
+                        handleChange(user.id, "email", e.target.value)
+                      }
+                      value={editUserValues[user.id]?.email || user.email}
+                      type="email"
+                      placeholder="email"
+                    />
+                  )}
                 </div>
               </td>
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>City:</p>
                   <p>{user.address?.city}</p>
-                  {edit && <input type="text" placeholder="city" />}
+                  {edit && (
+                    <input
+                      onChange={(e) =>
+                        handleChange(user.id, "address", e.target.value, "city")
+                      }
+                      value={
+                        editUserValues[user.id]?.address?.city ??
+                        (user.address?.city || "")
+                      }
+                      type="text"
+                      placeholder="city"
+                    />
+                  )}
                 </div>
               </td>
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>Street:</p>
                   <p>{user.address?.street}</p>
-                  {edit && <input type="text" placeholder="street" />}
+                  {edit && (
+                    <input
+                      onChange={(e) =>
+                        handleChange(
+                          user.id,
+                          "address",
+                          e.target.value,
+                          "street"
+                        )
+                      }
+                      value={
+                        editUserValues[user.id]?.address?.street ??
+                        (user.address?.street || "")
+                      }
+                      type="text"
+                      placeholder="street"
+                    />
+                  )}
                 </div>
               </td>
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>Suite:</p>
                   <p>{user.address?.suite}</p>
-                  {edit && <input type="text" placeholder="suite" />}
+                  {edit && (
+                    <input
+                      onChange={(e) =>
+                        handleChange(
+                          user.id,
+                          "address",
+                          e.target.value,
+                          "suite"
+                        )
+                      }
+                      value={
+                        editUserValues[user.id]?.address?.suite ??
+                        (user.address?.suite || "")
+                      }
+                      type="text"
+                      placeholder="suite"
+                    />
+                  )}
                 </div>
               </td>
               <td className={classes.content}>
