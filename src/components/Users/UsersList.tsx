@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IUsers } from "../../redux/type";
 import classes from "./UsersList.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setShowModalForm } from "../../redux/usersSlice";
+import { setEditUserValues, setShowModalForm } from "../../redux/usersSlice";
 import "../../styles/animations.scss";
 import DeleteUser from "../UI/DeleteUser";
 import Edit from "../UI/Edit";
@@ -16,10 +16,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
   const dispatch = useAppDispatch();
   const isEditInput = useAppSelector((state) => state.user.isShowEditUser);
   const currentIdEditUser = useAppSelector((state) => state.user.currentIdUser);
-
-  const [editUserValues, setEditUserValues] = useState<{
-    [key: number]: Partial<IUsers>;
-  }>({});
+  const editUserValues = useAppSelector((state) => state.user.editUserValues);
 
   const showUserForm = () => {
     dispatch(setShowModalForm(true));
@@ -32,19 +29,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
     value: string,
     addressField?: keyof IUsers["address"]
   ) => {
-    setEditUserValues((prev) => ({
-      ...prev,
-      [userId]: {
-        ...prev[userId],
-        [field]:
-          field === "address" && addressField
-            ? {
-                ...prev[userId]?.address, // Додаємо всі попередні дані адреси
-                [addressField]: value, // Оновлюємо конкретне поле адреси
-              }
-            : value, // Оновлюємо інші поля, наприклад name, username
-      },
-    }));
+    dispatch(setEditUserValues({ userId, field, value, addressField }));
   };
   return (
     <table className="table">
