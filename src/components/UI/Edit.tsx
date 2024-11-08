@@ -1,32 +1,30 @@
-import React, { Fragment, useCallback, useState } from "react";
-import { setCurrentIdUser, setShowEditUser } from "../../redux/usersSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import React, { Fragment, useCallback } from "react";
+import { setActiveEditUserId, setCurrentIdUser } from "../../redux/usersSlice";
+import { useAppDispatch } from "../../redux/hooks";
 import { useUpdateUserMutation } from "../../api";
 import { IUsers } from "../../redux/type";
 interface EditIdUserProps {
   userId: number;
   updateEditUser: any;
   users: IUsers[];
+  isEditing: boolean;
+  onToggleEdit: () => void;
 }
-function Edit({ userId, updateEditUser, users }: EditIdUserProps) {
+function Edit({
+  userId,
+  updateEditUser,
+  users,
+  isEditing,
+  onToggleEdit,
+}: EditIdUserProps) {
   const dispatch = useAppDispatch();
   const [updateUser] = useUpdateUserMutation();
-  const [isEditing, setIsEditing] = useState<boolean>(false); // Додаємо стан
-
-  const handleToggleEdit = useCallback(() => {
-    setIsEditing((prev) => !prev);
-    dispatch(setCurrentIdUser(userId));
-    dispatch(setShowEditUser(!isEditing));
-  }, [dispatch, userId, isEditing]);
 
   const handleUpdateUser = useCallback(async () => {
     dispatch(setCurrentIdUser(userId));
-    dispatch(setShowEditUser(true));
 
     const isEmptyEditUser = Object.keys(updateEditUser).length === 0;
-
-    // Отримуємо поточні дані користувача
-    const existingUserData = users.find((user) => user.id === userId);
+    const existingUserData = users.find((user) => user.id === userId); // Отримуємо поточні дані користувача
 
     if (!isEmptyEditUser && existingUserData) {
       const formattedUpdateData = {
@@ -39,22 +37,20 @@ function Edit({ userId, updateEditUser, users }: EditIdUserProps) {
       };
       try {
         await updateUser(formattedUpdateData as IUsers);
-        console.log("Оновлені данні", formattedUpdateData);
-        setIsEditing(false); //Кнопка змінюється назад на Edit Закриваємо редагування після відправки
-        dispatch(setShowEditUser(false)); //Закриваємо редагування після відправки
+        dispatch(setActiveEditUserId(null));
+        console.log("Update data", formattedUpdateData);
       } catch (error) {
-        console.log("Помилка при оновленні данних", error);
+        console.log("Error update data", error);
       }
     } else {
+      onToggleEdit();
       // Якщо немає змін для редагування
       console.log("Немає змін для оновлення");
-      setIsEditing(false); // Закриваємо редагування після відправки
-      dispatch(setShowEditUser(false));
     }
-  }, [dispatch, userId, updateEditUser, updateUser, users]);
+  }, [userId, updateEditUser, updateUser, users, onToggleEdit]);
   return (
     <Fragment>
-      <button onClick={isEditing ? handleUpdateUser : handleToggleEdit}>
+      <button onClick={isEditing ? handleUpdateUser : onToggleEdit}>
         {isEditing ? "Send" : "Edit"}
       </button>
     </Fragment>

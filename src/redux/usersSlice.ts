@@ -5,23 +5,28 @@ interface InitialState {
   isShowModalForm: boolean;
   isShowDeleteModal: boolean;
   currentIdUser: number;
-  isShowEditUser: boolean;
+  // isShowEditUser: boolean;
   editUserId: number | null;
   editUserValues: { [key: number]: Partial<IUsers> };
+  activeEditUserId: number | null;
 }
 
 const initialState: InitialState = {
   isShowModalForm: false,
   isShowDeleteModal: false,
   currentIdUser: 0,
-  isShowEditUser: false,
+  // isShowEditUser: false,
   editUserId: null,
   editUserValues: {},
+  activeEditUserId: null, // Додаємо цей стан
 };
 const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
+    setActiveEditUserId(state, action: PayloadAction<number | null>) {
+      state.activeEditUserId = action.payload;
+    },
     setShowModalForm(state, action: PayloadAction<boolean>) {
       state.isShowModalForm = action.payload;
     },
@@ -31,12 +36,8 @@ const userSlice = createSlice({
     setCurrentIdUser(state, action: PayloadAction<number>) {
       state.currentIdUser = action.payload;
     },
-    setShowEditUser(state, action: PayloadAction<boolean>) {
-      state.isShowEditUser = action.payload;
-    },
-    setEditIdUser(state, action: PayloadAction<number | null>) {
-      state.editUserId = action.payload;
-    },
+   
+
     setEditUserValues(
       state,
       action: PayloadAction<{
@@ -64,8 +65,8 @@ export const {
   setShowModalForm,
   setShowDeleteModal,
   setCurrentIdUser,
-  setShowEditUser,
-  setEditIdUser,
+ 
   setEditUserValues,
+  setActiveEditUserId,
 } = userSlice.actions;
 export default userSlice.reducer;

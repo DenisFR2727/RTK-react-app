@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { IUsers } from "../../redux/type";
 import classes from "./UsersList.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setEditUserValues, setShowModalForm } from "../../redux/usersSlice";
+import {
+  setActiveEditUserId,
+  setEditUserValues,
+  setShowModalForm,
+} from "../../redux/usersSlice";
 import "../../styles/animations.scss";
 import DeleteUser from "../UI/DeleteUser";
 import Edit from "../UI/Edit";
@@ -14,9 +17,10 @@ interface UserProps {
 
 function UsersList({ users, deleteUserHandel }: UserProps) {
   const dispatch = useAppDispatch();
-  const isEditInput = useAppSelector((state) => state.user.isShowEditUser);
-  const currentIdEditUser = useAppSelector((state) => state.user.currentIdUser);
   const editUserValues = useAppSelector((state) => state.user.editUserValues);
+  const activeEditUserId = useAppSelector(
+    (state) => state.user.activeEditUserId
+  );
 
   const showUserForm = () => {
     dispatch(setShowModalForm(true));
@@ -53,14 +57,14 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
       </thead>
       <tbody>
         {users?.map((user) => {
-          const edit = isEditInput && currentIdEditUser === user.id;
+          const isEditing = activeEditUserId === user.id; // add current id to activeEditUserId in userSlice state
           return (
             <tr key={user.id} className={classes.background}>
               <th scope="row">{user.id}</th>
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>{user.name}</p>
-                  {edit && (
+                  {isEditing && (
                     <input
                       onChange={(e) =>
                         handleChange(user.id, "name", e.target.value)
@@ -75,7 +79,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>{user.username}</p>
-                  {edit && (
+                  {isEditing && (
                     <input
                       onChange={(e) =>
                         handleChange(user.id, "username", e.target.value)
@@ -92,7 +96,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
               <td className={classes.content}>
                 <div className={classes.contentUser}>
                   <p>{user.email}</p>
-                  {edit && (
+                  {isEditing && (
                     <input
                       onChange={(e) =>
                         handleChange(user.id, "email", e.target.value)
@@ -108,7 +112,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                 <div className={classes.contentUser}>
                   <p>City:</p>
                   <p>{user.address?.city}</p>
-                  {edit && (
+                  {isEditing && (
                     <input
                       onChange={(e) =>
                         handleChange(user.id, "address", e.target.value, "city")
@@ -128,7 +132,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                 <div className={classes.contentUser}>
                   <p>Street:</p>
                   <p>{user.address?.street}</p>
-                  {edit && (
+                  {isEditing && (
                     <input
                       onChange={(e) =>
                         handleChange(
@@ -153,7 +157,7 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                 <div className={classes.contentUser}>
                   <p>Suite:</p>
                   <p>{user.address?.suite}</p>
-                  {edit && (
+                  {isEditing && (
                     <input
                       onChange={(e) =>
                         handleChange(
@@ -179,6 +183,10 @@ function UsersList({ users, deleteUserHandel }: UserProps) {
                   userId={user.id}
                   updateEditUser={editUserValues}
                   users={users}
+                  isEditing={isEditing}
+                  onToggleEdit={() =>
+                    dispatch(setActiveEditUserId(isEditing ? null : user.id))
+                  }
                 />
                 <DeleteUser
                   id={user.id}
